@@ -3,14 +3,12 @@ import { useState } from "react";
 import { Check, Plus } from "lucide-react";
 
 type Priority = "low" | "medium" | "high";
-type Category = "Work" | "Personal" | "Other";
 
 interface TodoItem {
   id: number;
   text: string;
   completed: boolean;
   priority: Priority;
-  category: Category;
 }
 export function TodoApp() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
@@ -27,7 +25,6 @@ export function TodoApp() {
         text: newTodo.trim(),
         completed: false,
         priority: priority,
-        category: "Work",
       };
       setTodos((prevState) => [...prevState, newTodoItem]);
       setNewTodo("");
