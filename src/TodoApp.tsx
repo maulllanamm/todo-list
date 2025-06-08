@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Check, Plus } from "lucide-react";
 
 type Priority = "low" | "medium" | "high";
+type Filter = "all" | "active" | "completed";
 
 interface TodoItem {
   id: number;
@@ -14,8 +15,17 @@ export function TodoApp() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [newTodo, setNewTodo] = useState<string>("");
   const [priority, setPriority] = useState<Priority>("low");
+  const [filter, setFilter] = useState<Filter>("all");
 
   const dropdownPriority: Priority[] = ["low", "medium", "high"];
+
+  const filters: Filter[] = ["all", "active", "completed"];
+
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === "active") return !todo.completed;
+    if (filter === "completed") return todo.completed;
+    return true;
+  });
 
   const handleAddTodo = (e: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -86,15 +96,34 @@ export function TodoApp() {
           </div>
         </div>
 
+        {/* Filter Tabs */}
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1">
+            {filters.map((filterType) => (
+              <button
+                key={filterType}
+                onClick={() => setFilter(filterType)}
+                className={`px-4 py-2 text-sm font-medium rounded-md capitalize transition-colors ${
+                  filter === filterType
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {filterType}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Todo List */}
         <div className="bg-white rounded-lg shadow-sm border">
-          {todos.length === 0 ? (
+          {filteredTodos.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
               <p>No tasks found</p>
             </div>
           ) : (
             <ul className="divide-y divide-gray-200">
-              {todos.map((todo) => (
+              {filteredTodos.map((todo) => (
                 <li
                   key={todo.id}
                   className="p-4 hover:bg-gray-50 transition-colors"
