@@ -67,6 +67,10 @@ export function TodoApp() {
     setEditInput(text);
   };
 
+  const handlDeleteTodo = (id: number) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
   function toggleTodo(id: number) {
     const todosMap = todos.map((item) =>
       item.id === id ? { ...item, completed: !item.completed } : item,
@@ -228,6 +232,14 @@ export function TodoApp() {
                           title="Edit"
                         >
                           <Edit3 size={16} />
+                        </button>
+
+                        <button
+                          onClick={() => handlDeleteTodo(todo.id)}
+                          className="p-2 text-gray-400 hover:text-red-500 rounded-md hover:bg-red-50 transition-colors"
+                          title="Delete"
+                        >
+                          <X size={16} />
                         </button>
                       </div>
                     )}
