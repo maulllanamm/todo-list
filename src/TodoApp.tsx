@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 
 type Priority = "low" | "medium" | "high";
 type Category = "Work" | "Personal" | "Other";
@@ -30,6 +30,13 @@ export function TodoApp() {
       setNewTodo("");
     }
   };
+
+  function toggleTodo(id: number) {
+    const todosMap = todos.map((item) =>
+      item.id === id ? { ...item, completed: !item.completed } : item,
+    );
+    setTodos(todosMap);
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -77,29 +84,42 @@ export function TodoApp() {
                   key={todo.id}
                   className="p-4 hover:bg-gray-50 transition-colors"
                 >
-                  <div className="flex-1">
-                    <div>
-                      <span
-                        className={`text-base ${
-                          todo.completed
-                            ? "text-gray-500 line-through"
-                            : "text-gray-800"
-                        }`}
-                      >
-                        {todo.text}
-                      </span>
-                      <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center gap-3">
+                    {/* Checkbox */}
+                    <button
+                      onClick={() => toggleTodo(todo.id)}
+                      className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                        todo.completed
+                          ? "bg-green-500 border-green-500 text-white"
+                          : "border-gray-300 hover:border-green-400"
+                      }`}
+                    >
+                      {todo.completed && <Check size={14} />}
+                    </button>
+                    <div className="flex-1">
+                      <div>
                         <span
-                          className={`text-xs px-2 py-1 rounded-full ${
-                            todo.priority === "high"
-                              ? "bg-red-100 text-red-700"
-                              : todo.priority === "medium"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-green-100 text-green-700"
+                          className={`text-base ${
+                            todo.completed
+                              ? "text-gray-500 line-through"
+                              : "text-gray-800"
                           }`}
                         >
-                          {todo.priority}
+                          {todo.text}
                         </span>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full ${
+                              todo.priority === "high"
+                                ? "bg-red-100 text-red-700"
+                                : todo.priority === "medium"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-green-100 text-green-700"
+                            }`}
+                          >
+                            {todo.priority}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
