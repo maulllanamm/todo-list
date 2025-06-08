@@ -78,6 +78,9 @@ export function TodoApp() {
     setTodos(todosMap);
   }
 
+  const completedCount = todos.filter((todo) => todo.completed).length;
+  const activeCount = todos.filter((todo) => !todo.completed).length;
+
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
@@ -247,6 +250,50 @@ export function TodoApp() {
                 </li>
               ))}
             </ul>
+          )}
+        </div>
+
+        {/* Statistics */}
+        <div className="mt-6 bg-white rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            Statistics
+          </h3>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-gray-800">
+                {todos.length}
+              </div>
+              <div className="text-sm text-gray-500">Total</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-green-600">
+                {completedCount}
+              </div>
+              <div className="text-sm text-gray-500">Completed</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-blue-600">
+                {activeCount}
+              </div>
+              <div className="text-sm text-gray-500">Active</div>
+            </div>
+          </div>
+
+          {todos.length > 0 && (
+            <div className="mt-4">
+              <div className="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span>
+                  {Math.round((completedCount / todos.length) * 100)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${(completedCount / todos.length) * 100}%` }}
+                ></div>
+              </div>
+            </div>
           )}
         </div>
 
