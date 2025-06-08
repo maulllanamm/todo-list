@@ -15,6 +15,9 @@ interface TodoItem {
 export function TodoApp() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [newTodo, setNewTodo] = useState<string>("");
+  const [priority, setPriority] = useState<Priority>("low");
+
+  const dropdownPriority: Priority[] = ["low", "medium", "high"];
 
   const handleAddTodo = (e: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -23,7 +26,7 @@ export function TodoApp() {
         id: Date.now(),
         text: newTodo.trim(),
         completed: false,
-        priority: "medium",
+        priority: priority,
         category: "Work",
       };
       setTodos((prevState) => [...prevState, newTodoItem]);
@@ -61,6 +64,21 @@ export function TodoApp() {
               placeholder="Add a new task..."
               className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value as Priority)}
+              className="px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 transition-colors cursor-pointer min-w-32 appearance-none bg-no-repeat bg-right bg-[length:16px] pr-8"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                backgroundPosition: "right 0.75rem center",
+              }}
+            >
+              {dropdownPriority.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
             <button
               onClick={handleAddTodo}
               className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
