@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Check, Plus } from "lucide-react";
+import { Check, Edit3, Plus, X } from "lucide-react";
 
 type Priority = "low" | "medium" | "high";
 type Filter = "all" | "active" | "completed";
@@ -16,6 +16,8 @@ export function TodoApp() {
   const [newTodo, setNewTodo] = useState<string>("");
   const [priority, setPriority] = useState<Priority>("low");
   const [filter, setFilter] = useState<Filter>("all");
+  const [editInput, setEditInput] = useState<string>("");
+  const [editingId, setEditingId] = useState<number | null>();
 
   const dropdownPriority: Priority[] = ["low", "medium", "high"];
 
@@ -39,6 +41,30 @@ export function TodoApp() {
       setTodos((prevState) => [...prevState, newTodoItem]);
       setNewTodo("");
     }
+  };
+
+  const handleSaveEdit = (e: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (editInput.trim()) {
+      setTodos(
+        todos.map((todo) =>
+          todo.id === editingId ? { ...todo, text: editInput.trim() } : todo,
+        ),
+      );
+      setEditingId(null);
+      setEditInput("");
+    }
+  };
+
+  const handleCancleEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEditingId(null);
+    setEditInput("");
+  };
+
+  const handlStartEdit = (id: number, text: string) => {
+    setEditingId(id);
+    setEditInput(text);
   };
 
   function toggleTodo(id: number) {
@@ -140,32 +166,71 @@ export function TodoApp() {
                     >
                       {todo.completed && <Check size={14} />}
                     </button>
+
+                    {/* Todo Content */}
                     <div className="flex-1">
-                      <div>
-                        <span
-                          className={`text-base ${
-                            todo.completed
-                              ? "text-gray-500 line-through"
-                              : "text-gray-800"
-                          }`}
-                        >
-                          {todo.text}
-                        </span>
-                        <div className="flex items-center gap-2 mt-1">
+                      {editingId === todo.id ? (
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={editInput}
+                            onChange={(e) => setEditInput(e.target.value)}
+                            className="flex-1 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            autoFocus
+                          />
+                          <button
+                            onClick={handleSaveEdit}
+                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={handleCancleEdit}
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
                           <span
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              todo.priority === "high"
-                                ? "bg-red-100 text-red-700"
-                                : todo.priority === "medium"
-                                  ? "bg-yellow-100 text-yellow-700"
-                                  : "bg-green-100 text-green-700"
+                            className={`text-base ${
+                              todo.completed
+                                ? "text-gray-500 line-through"
+                                : "text-gray-800"
                             }`}
                           >
-                            {todo.priority}
+                            {todo.text}
                           </span>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full ${
+                                todo.priority === "high"
+                                  ? "bg-red-100 text-red-700"
+                                  : todo.priority === "medium"
+                                    ? "bg-yellow-100 text-yellow-700"
+                                    : "bg-green-100 text-green-700"
+                              }`}
+                            >
+                              {todo.priority}
+                            </span>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
+
+                    {/* Actions */}
+                    {editingId !== todo.id && (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handlStartEdit(todo.id, todo.text)}
+                          className="p-2 text-gray-400 hover:text-blue-500 rounded-md hover:bg-blue-50 transition-colors"
+                          title="Edit"
+                        >
+                          <Edit3 size={16} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </li>
               ))}
