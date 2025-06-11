@@ -4,9 +4,11 @@ import { TodoItem, Priority, Filter } from "../types/todo";
 export const useTodos = () => {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [newTodo, setNewTodo] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [priority, setPriority] = useState<Priority>("low");
   const [filter, setFilter] = useState<Filter>("all");
   const [editInput, setEditInput] = useState<string>("");
+  const [editDescription, setEditDescription] = useState<string>("");
   const [editingId, setEditingId] = useState<number | null>(null);
 
   const filteredTodos = todos.filter((todo) => {
@@ -25,6 +27,7 @@ export const useTodos = () => {
       };
       setTodos((prevState) => [...prevState, newTodoItem]);
       setNewTodo("");
+      setDescription("");
     }
   };
 
@@ -35,31 +38,34 @@ export const useTodos = () => {
   const toggleTodo = (id: number) => {
     setTodos(
       todos.map((item) =>
-        item.id === id ? { ...item, completed: !item.completed } : item,
-      ),
+        item.id === id ? { ...item, completed: !item.completed } : item
+      )
     );
   };
 
-  const startEdit = (id: number, text: string) => {
+  const startEdit = (id: number, text: string, description: string) => {
     setEditingId(id);
     setEditInput(text);
+    setDescription(description);
   };
 
   const saveEdit = () => {
     if (editInput.trim()) {
       setTodos(
         todos.map((todo) =>
-          todo.id === editingId ? { ...todo, text: editInput.trim() } : todo,
-        ),
+          todo.id === editingId ? { ...todo, text: editInput.trim() } : todo
+        )
       );
       setEditingId(null);
       setEditInput("");
+      setEditDescription("");
     }
   };
 
   const cancelEdit = () => {
     setEditingId(null);
     setEditInput("");
+    setEditDescription("");
   };
 
   const completedCount = todos.filter((todo) => todo.completed).length;
@@ -69,10 +75,12 @@ export const useTodos = () => {
     // State
     todos,
     newTodo,
+    description,
     priority,
     filter,
     editInput,
     editingId,
+    editDescription,
     filteredTodos,
     completedCount,
     activeCount,
@@ -80,8 +88,10 @@ export const useTodos = () => {
     // State setters
     setNewTodo,
     setPriority,
+    setDescription,
     setFilter,
     setEditInput,
+    setEditDescription,
 
     // Actions
     addTodo,

@@ -10,9 +10,11 @@ export function TodoApp() {
   const {
     newTodo,
     priority,
+    description,
     filter,
     editInput,
     editingId,
+    editDescription,
     filteredTodos,
     todos,
     completedCount,
@@ -21,6 +23,8 @@ export function TodoApp() {
     setPriority,
     setFilter,
     setEditInput,
+    setDescription,
+    setEditDescription,
     addTodo,
     deleteTodo,
     toggleTodo,
@@ -37,6 +41,8 @@ export function TodoApp() {
         <TodoForm
           newTodo={newTodo}
           priority={priority}
+          description={description}
+          onDescriptionChange={setDescription}
           onNewTodoChange={setNewTodo}
           onPriorityChange={setPriority}
           onSubmit={addTodo}
