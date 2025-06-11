@@ -4,7 +4,7 @@ interface TodoHeaderProps {
 }
 
 export const TodoHeader = ({
-  title = "React Todo App",
+  title = "Todo App",
   description = "A simple todo application built with React hooks",
 }: TodoHeaderProps) => {
   return (
