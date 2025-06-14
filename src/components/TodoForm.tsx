@@ -9,7 +9,7 @@ interface TodoFormProps {
   onDescriptionChange: (value: string) => void;
   onNewTodoChange: (value: string) => void;
   onPriorityChange: (priority: Priority) => void;
-  onSubmit: () => void;
+  onSubmit: (e: React.FormEvent) => void;
 }
 
 export const TodoForm = ({
@@ -23,7 +23,7 @@ export const TodoForm = ({
 }: TodoFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit();
+    onSubmit(e);
   };
 
   return (

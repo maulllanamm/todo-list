@@ -19,15 +19,18 @@ export function TodoApp() {
     todos,
     completedCount,
     activeCount,
+    expandedTodos,
     setNewTodo,
     setPriority,
     setFilter,
     setEditInput,
-    setDescription,
     setEditDescription,
+    setDescription,
+
     addTodo,
     deleteTodo,
     toggleTodo,
+    toggleExpanded,
     startEdit,
     saveEdit,
     cancelEdit,
@@ -52,14 +55,18 @@ export function TodoApp() {
 
         <TodoList
           todos={filteredTodos}
+          expandedTodos={expandedTodos}
           editingId={editingId}
           editInput={editInput}
+          editDescription={editDescription}
           onToggleTodo={toggleTodo}
+          onToggleExpanded={toggleExpanded}
           onDeleteTodo={deleteTodo}
           onStartEdit={startEdit}
           onSaveEdit={saveEdit}
           onCancelEdit={cancelEdit}
           onEditInputChange={setEditInput}
+          onEditDescriptionChange={setEditDescription}
         />
 
         <TodoStats

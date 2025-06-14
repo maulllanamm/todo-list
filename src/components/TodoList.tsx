@@ -3,26 +3,34 @@ import { TodoItem } from "../types/todo";
 
 interface TodoListProps {
   todos: TodoItem[];
+  expandedTodos: Set<number>;
   editingId: number | null;
   editInput: string;
+  editDescription: string;
   onToggleTodo: (id: number) => void;
+  onToggleExpanded: (id: number) => void;
   onDeleteTodo: (id: number) => void;
-  onStartEdit: (id: number, text: string) => void;
-  onSaveEdit: () => void;
-  onCancelEdit: () => void;
+  onStartEdit: (id: number, text: string, description: string) => void;
+  onSaveEdit: (e: React.FormEvent) => void;
+  onCancelEdit: (e: React.FormEvent) => void;
   onEditInputChange: (value: string) => void;
+  onEditDescriptionChange: (value: string) => void;
 }
 
 export const TodoList = ({
   todos,
+  expandedTodos,
   editingId,
   editInput,
+  editDescription,
   onToggleTodo,
+  onToggleExpanded,
   onDeleteTodo,
   onStartEdit,
   onSaveEdit,
   onCancelEdit,
   onEditInputChange,
+  onEditDescriptionChange,
 }: TodoListProps) => {
   if (todos.length === 0) {
     return (
@@ -33,7 +41,6 @@ export const TodoList = ({
       </div>
     );
   }
-
   return (
     <div className="bg-white rounded-lg shadow-sm border">
       <ul className="divide-y divide-gray-200">
@@ -41,14 +48,18 @@ export const TodoList = ({
           <TodoItemComponent
             key={todo.id}
             todo={todo}
+            expandedTodos={expandedTodos}
             isEditing={editingId === todo.id}
             editInput={editInput}
+            editDescription={editDescription}
             onToggle={onToggleTodo}
+            onToggleExpanded={onToggleExpanded}
             onDelete={onDeleteTodo}
             onStartEdit={onStartEdit}
             onSaveEdit={onSaveEdit}
             onCancelEdit={onCancelEdit}
             onEditInputChange={onEditInputChange}
+            onEditDescriptionChange={onEditDescriptionChange}
           />
         ))}
       </ul>

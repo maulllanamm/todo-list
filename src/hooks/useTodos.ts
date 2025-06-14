@@ -10,6 +10,7 @@ export const useTodos = () => {
   const [editInput, setEditInput] = useState<string>("");
   const [editDescription, setEditDescription] = useState<string>("");
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [expandedTodos, setExpandedTodos] = useState<Set<number>>(new Set());
 
   const filteredTodos = todos.filter((todo) => {
     if (filter === "active") return !todo.completed;
@@ -17,11 +18,13 @@ export const useTodos = () => {
     return true;
   });
 
-  const addTodo = () => {
+  const addTodo = (e: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (newTodo.trim()) {
       const newTodoItem: TodoItem = {
         id: Date.now(),
         text: newTodo.trim(),
+        description: description.trim(),
         completed: false,
         priority: priority,
       };
@@ -46,14 +49,21 @@ export const useTodos = () => {
   const startEdit = (id: number, text: string, description: string) => {
     setEditingId(id);
     setEditInput(text);
-    setDescription(description);
+    setEditDescription(description);
   };
 
-  const saveEdit = () => {
+  const saveEdit = (e: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (editInput.trim()) {
       setTodos(
         todos.map((todo) =>
-          todo.id === editingId ? { ...todo, text: editInput.trim() } : todo
+          todo.id === editingId
+            ? {
+                ...todo,
+                text: editInput.trim(),
+                description: editDescription.trim(),
+              }
+            : todo
         )
       );
       setEditingId(null);
@@ -62,10 +72,23 @@ export const useTodos = () => {
     }
   };
 
-  const cancelEdit = () => {
+  const cancelEdit = (e: React.FormEvent) => {
+    e.preventDefault();
     setEditingId(null);
     setEditInput("");
     setEditDescription("");
+  };
+
+  const toggleExpanded = (id: number) => {
+    setExpandedTodos((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
   const completedCount = todos.filter((todo) => todo.completed).length;
@@ -84,6 +107,7 @@ export const useTodos = () => {
     filteredTodos,
     completedCount,
     activeCount,
+    expandedTodos,
 
     // State setters
     setNewTodo,
@@ -92,11 +116,13 @@ export const useTodos = () => {
     setFilter,
     setEditInput,
     setEditDescription,
+    setExpandedTodos,
 
     // Actions
     addTodo,
     deleteTodo,
     toggleTodo,
+    toggleExpanded,
     startEdit,
     saveEdit,
     cancelEdit,
