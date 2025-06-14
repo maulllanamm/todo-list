@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { TodoItem, Priority, Filter } from "../types/todo";
+import { useLocalStorage } from "react-use";
 
 export const useTodos = () => {
-  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [todos, setTodos] = useLocalStorage<TodoItem[]>("todos", []);
   const [newTodo, setNewTodo] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [priority, setPriority] = useState<Priority>("low");
@@ -12,7 +13,8 @@ export const useTodos = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [expandedTodos, setExpandedTodos] = useState<Set<number>>(new Set());
 
-  const filteredTodos = todos.filter((todo) => {
+  const safeTodos = todos ?? [];
+  const filteredTodos = safeTodos.filter((todo) => {
     if (filter === "active") return !todo.completed;
     if (filter === "completed") return todo.completed;
     return true;
@@ -28,19 +30,19 @@ export const useTodos = () => {
         completed: false,
         priority: priority,
       };
-      setTodos((prevState) => [...prevState, newTodoItem]);
+      setTodos([...safeTodos, newTodoItem]);
       setNewTodo("");
       setDescription("");
     }
   };
 
   const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    setTodos(safeTodos.filter((todo) => todo.id !== id));
   };
 
   const toggleTodo = (id: number) => {
     setTodos(
-      todos.map((item) =>
+      safeTodos.map((item) =>
         item.id === id ? { ...item, completed: !item.completed } : item
       )
     );
@@ -56,7 +58,7 @@ export const useTodos = () => {
     if (e) e.preventDefault();
     if (editInput.trim()) {
       setTodos(
-        todos.map((todo) =>
+        safeTodos.map((todo) =>
           todo.id === editingId
             ? {
                 ...todo,
@@ -91,8 +93,8 @@ export const useTodos = () => {
     });
   };
 
-  const completedCount = todos.filter((todo) => todo.completed).length;
-  const activeCount = todos.filter((todo) => !todo.completed).length;
+  const completedCount = safeTodos.filter((todo) => todo.completed).length;
+  const activeCount = safeTodos.filter((todo) => !todo.completed).length;
 
   return {
     // State
