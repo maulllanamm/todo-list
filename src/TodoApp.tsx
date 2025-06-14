@@ -16,7 +16,7 @@ export function TodoApp() {
     editingId,
     editDescription,
     filteredTodos,
-    todos,
+    safeTodos,
     completedCount,
     activeCount,
     expandedTodos,
@@ -70,7 +70,7 @@ export function TodoApp() {
         />
 
         <TodoStats
-          totalCount={todos.length}
+          totalCount={safeTodos.length}
           completedCount={completedCount}
           activeCount={activeCount}
         />

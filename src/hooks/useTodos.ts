@@ -98,7 +98,7 @@ export const useTodos = () => {
 
   return {
     // State
-    todos,
+    safeTodos,
     newTodo,
     description,
     priority,
