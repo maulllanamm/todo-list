@@ -45,7 +45,14 @@ export const TodoList = ({
     <div className="bg-white rounded-lg shadow-sm border">
       <ul className="divide-y divide-gray-200">
         {[...todos]
-          .sort((a, b) => Number(a.completed) - Number(b.completed))
+          .sort((a, b) => {
+            if (a.completed !== b.completed) {
+              return Number(a.completed) - Number(b.completed);
+            }
+
+            const priorityOrder = { high: 0, medium: 1, low: 2 };
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+          })
           .map((todo) => (
             <TodoItemComponent
               key={todo.id}
