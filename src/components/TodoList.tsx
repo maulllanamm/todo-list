@@ -44,24 +44,26 @@ export const TodoList = ({
   return (
     <div className="bg-white rounded-lg shadow-sm border">
       <ul className="divide-y divide-gray-200">
-        {todos.map((todo) => (
-          <TodoItemComponent
-            key={todo.id}
-            todo={todo}
-            expandedTodos={expandedTodos}
-            isEditing={editingId === todo.id}
-            editInput={editInput}
-            editDescription={editDescription}
-            onToggle={onToggleTodo}
-            onToggleExpanded={onToggleExpanded}
-            onDelete={onDeleteTodo}
-            onStartEdit={onStartEdit}
-            onSaveEdit={onSaveEdit}
-            onCancelEdit={onCancelEdit}
-            onEditInputChange={onEditInputChange}
-            onEditDescriptionChange={onEditDescriptionChange}
-          />
-        ))}
+        {[...todos]
+          .sort((a, b) => Number(a.completed) - Number(b.completed))
+          .map((todo) => (
+            <TodoItemComponent
+              key={todo.id}
+              todo={todo}
+              expandedTodos={expandedTodos}
+              isEditing={editingId === todo.id}
+              editInput={editInput}
+              editDescription={editDescription}
+              onToggle={onToggleTodo}
+              onToggleExpanded={onToggleExpanded}
+              onDelete={onDeleteTodo}
+              onStartEdit={onStartEdit}
+              onSaveEdit={onSaveEdit}
+              onCancelEdit={onCancelEdit}
+              onEditInputChange={onEditInputChange}
+              onEditDescriptionChange={onEditDescriptionChange}
+            />
+          ))}
       </ul>
     </div>
   );
